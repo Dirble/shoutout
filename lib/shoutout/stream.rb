@@ -31,32 +31,48 @@ module Shoutout
 
     def connect
       return false if @connected
-
       uri = URI.parse(@url)
-      @socket = TCPSocket.new(uri.host, uri.port)
-      @socket.puts send_header_request(uri.path)
 
+      @socket = TCPTimeout::TCPSocket.new(uri.host, uri.port, connect_timeout: 10, write_timeout: 9)
+      @socket.write(send_header_request(uri.path, uri.host))
+      @first = true
       # Read status line
-      status_line = @socket.gets
-      status_code = status_line.match(/\A(HTTP\/[0-9]\.[0-9]|ICY) ([0-9]{3})/)[2].to_i
+      status_line = @socket.read(15)
+      if status_line != nil
+        status_code = status_line.match(/\A(HTTP\/[0-9]\.[0-9]|ICY) ([0-9]{3})/)
+        if status_code != nil
+          status_code = status_code[2].to_i
+        else status_code = false
+        end
+      else
+        status_code = false
+      end
+
 
       @connected = true
 
       read_headers
 
-      if status_code >= 300 && status_code < 400 && headers[:location]
+      if status_code != false && status_code >= 300 && status_code < 400 && headers[:location]
         disconnect
-
-        @url = URI.join(uri, headers[:location]).to_s
+        
+        if @url_retry != nil
+          raise(SocketError) if @url == @url_retry
+        end
+        @url = headers[:location].to_s
+        @url_retry = headers[:location].to_s
 
         return connect
       end
-
-      unless status_code >= 200 && status_code < 300
-        disconnect
-
-        return false
+      
+      if status_code != false
+          unless status_code >= 200 && status_code < 300
+            disconnect
+    
+            return false
+          end
       end
+
 
       unless metadata_interval
         disconnect
@@ -67,12 +83,6 @@ module Shoutout
       @read_metadata_thread = Thread.new(&method(:read_metadata))
 
       true
-    end
-
-    def send_header_request(address)
-        return "GET / HTTP/1.1\r\nHost: #{address}\r\nConnection: close\r\n" +
-               "icy-metadata: 1\r\ntransferMode.dlna.org: Streaming\n\r\nHEAD / HTTP/1.1\r\n" +
-               "Host: #{address}\r\n" + "User-Agent: DirbleScrobbler\n\r\n";
     end
 
     def disconnect
@@ -123,29 +133,27 @@ module Shoutout
       true
     end
 
+    def send_header_request(address, host)
+        return "GET #{address} HTTP/1.1\r\nAccept-Encoding: identity\r\nIcy-Metadata: 1\r\nHost: #{host}\r\nConnection: close\r\nUser-Agent: iTunes/9.1.1\r\n\r\n";
+    end
+
     private
       def read_headers
-        raw_headers = ""
-        while line = @socket.gets
-          break if line.chomp == ""
-          raw_headers << line
-        end
-        @headers = Headers.parse(raw_headers)
+        lines = @socket.read(512)
+        #lines = lines.split("\r\n\r\n").first
+        @headers = Headers.parse(lines)
       end
 
       def read_metadata
         while @connected
           # Skip audio data
-          data = @socket.read(metadata_interval) || raise(EOFError)
+          data = @socket.read(metadata_interval + 255) || raise(EOFError)
+          raw_data = data.unpack("A*")[0]
+          match = raw_data.match(/(StreamTitle.*;)/)
+          next if match.nil?
 
-          data = @socket.read(1) || raise(EOFError)
-          metadata_length = data.unpack("c")[0] * 16
-          next if metadata_length == 0
-
-          data = @socket.read(metadata_length) || raise(EOFError)
-          raw_metadata = data.unpack("A*")[0]
-          @metadata = Metadata.parse(raw_metadata)
-
+          @metadata = Metadata.parse(match[1])
+          
           report_metadata_change(@metadata)
         end
       rescue Errno::EBADF, IOError => e
