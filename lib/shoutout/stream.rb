@@ -34,7 +34,12 @@ module Shoutout
       uri = URI.parse(@url)
 
       @socket = TCPTimeout::TCPSocket.new(uri.host, uri.port, connect_timeout: 10, write_timeout: 9)
-      @socket.write(send_header_request(uri.path, uri.host))
+      path = uri.path
+      if path == nil || path == ""
+        path = "/"
+      end
+      headersget = send_header_request(path, uri.host)
+      @socket.write(headersget)
       @first = true
       # Read status line
       status_line = @socket.read(15)
@@ -47,7 +52,6 @@ module Shoutout
       else
         status_code = false
       end
-
 
       @connected = true
 
@@ -92,7 +96,12 @@ module Shoutout
 
       @socket.close if @socket && !@socket.closed?
       @socket = nil
-
+      if @read_metadata_thread != nil
+        Thread.kill(@read_metadata_thread)
+      end
+      if @last_metadata_change_thread != nil
+        Thread.kill(@last_metadata_change_thread)
+      end
       true
     end
 
@@ -134,7 +143,7 @@ module Shoutout
     end
 
     def send_header_request(address, host)
-        return "GET #{address} HTTP/1.1\r\nAccept-Encoding: identity\r\nIcy-Metadata: 1\r\nHost: #{host}\r\nConnection: close\r\nUser-Agent: iTunes/9.1.1\r\n\r\n";
+        return "GET #{address} HTTP/1.1\r\nIcy-Metadata: 1\r\nHost: #{host}\r\nUser-Agent: iTunes/9.1.1\r\nAccept: */*\r\n\r\n";
     end
 
     private
