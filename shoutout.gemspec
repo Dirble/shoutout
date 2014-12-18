@@ -6,18 +6,18 @@ Gem::Specification.new do |s|
   s.version       = Shoutout::VERSION
 
   s.platform      = Gem::Platform::RUBY
-  s.author        = "Douwe Maan"
-  s.email         = "douwe@selenight.nl"
-  s.homepage      = "https://github.com/DouweM/shoutout"
-  s.description   = "A Ruby library for easily getting metadata from Shoutcast-compatible audio streaming servers"
-  s.summary       = "Read metadata from Shoutcast streams"
+  s.author        = ["Douwe Maan", "Håkan Nylén"]
+  s.email         = ["douwe@selenight.nl", "hakan@dun.se"]
+  s.homepage      = "https://github.com/dirble/shoutout"
+  s.description   = "A Ruby library for easily getting metadata from Shoutcast- and icecast-compatible audio streaming servers"
+  s.summary       = "Read metadata from Shoutcast and Icecast streams"
   s.license       = "MIT"
 
   s.files         = Dir.glob("lib/**/*") + %w(LICENSE README.md Rakefile Gemfile)
   s.test_files    = Dir.glob("spec/**/*")
   s.require_path  = "lib"
-  s.add_dependency("tcp_timeout")
   
-  s.add_development_dependency "rake"
-  s.add_development_dependency "rspec"
+  s.add_runtime_dependency     "tcp_timeout", "~> 0.1", ">= 0.1.1"
+  s.add_development_dependency "rake", '~> 0'
+  s.add_development_dependency "rspec", '~> 0'
 end
