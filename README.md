@@ -11,7 +11,7 @@ gem install shoutout
 Or in your Gemfile:
 
 ```ruby
-gem "shoutout"
+gem "shoutout", github: "dirble/shoutout"
 ```
 
 ## Usage
