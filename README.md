@@ -4,11 +4,12 @@ A Ruby library for easily getting metadata from Shoutcast-compatible audio strea
 
 ## Installation
 
+Use the original gem like this:
 ```sh
 gem install shoutout
 ```
 
-Or in your Gemfile:
+Or use mine, with better thread-safe and encoding in your Gemfile:
 
 ```ruby
 gem "shoutout", github: "dirble/shoutout"
