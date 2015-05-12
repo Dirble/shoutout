@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Shoutout
   class Metadata < Hash
     def self.parse(raw_metadata)
