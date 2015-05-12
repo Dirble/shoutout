@@ -33,7 +33,7 @@ module Shoutout
       return false if @connected
       uri = URI.parse(@url)
 
-      @socket = TCPTimeout::TCPSocket.new(uri.host, uri.port, connect_timeout: 10, write_timeout: 9)
+      @socket = TCPTimeout::TCPSocket.new(uri.host, uri.port, connect_timeout: 5, write_timeout: 4)
       path = uri.path
       if path == nil || path == ""
         path = "/"
