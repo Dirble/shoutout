@@ -5,13 +5,7 @@ module Shoutout
       raw_metadata.split(";").each do |key_value_pair|
         key, value = key_value_pair.split("=", 2)
         if value != nil
-          valuetaken = value.match(/\A'(.*)'\z/)
-          if valuetaken != nil
-            metadata[key] = valuetaken[1].ensure_encoding('UTF-8',
-                                                                         :external_encoding  => :sniff,
-                                                                         :invalid_characters => :transcode
-            )
-          end
+          metadata[key] = value.match(/\A'(.*)'\z/)[1]
         end
       end
 
