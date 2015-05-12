@@ -2,7 +2,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "shoutout/version"
 
 Gem::Specification.new do |s|
-  s.name          = "shoutoutloud"
+  s.name          = "shoutout"
   s.version       = Shoutout::VERSION
 
   s.platform      = Gem::Platform::RUBY
