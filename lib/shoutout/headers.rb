@@ -1,4 +1,3 @@
-#encoding: utf-8
 module Shoutout
   class Headers < Hash
     def self.parse(raw_headers)

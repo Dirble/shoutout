@@ -1,4 +1,3 @@
-#encoding: utf-8
 module Shoutout
   class Stream
     include QuickAccess
