@@ -7,10 +7,7 @@ module Shoutout
         if value != nil
           valuetaken = value.match(/\A'(.*)'\z/)
           if valuetaken != nil
-            metadata[key] = valuetaken[1].ensure_encoding('UTF-8',
-                                                                         :external_encoding  => :sniff,
-                                                                         :invalid_characters => :drop
-            )
+            metadata[key] = valuetaken[1].sterilize!
           end
         end
       end
@@ -69,7 +66,7 @@ module Shoutout
       private
         def artist_and_song
           if now_playing != nil
-            @artist_and_song ||= now_playing.ensure_encoding('UTF-8').split(" - ", 2)
+            @artist_and_song ||= now_playing.split(" - ", 2)
           else
             @artist_and_song = ["", ""]
           end
