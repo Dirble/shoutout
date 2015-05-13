@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version       = Shoutout::VERSION
 
   s.platform      = Gem::Platform::RUBY
-  s.author        = ["Douwe Maan", "Håkan Nylén"]
+  s.author        = ["Douwe Maan", "Hakan Nylen"]
   s.email         = ["douwe@selenight.nl", "hakan@dun.se"]
   s.homepage      = "https://github.com/dirble/shoutout"
   s.description   = "A fork of shoutout to handle threads, encoding and more better."
