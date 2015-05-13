@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_path  = "lib"
   
   s.add_runtime_dependency     "tcp_timeout", "~> 0.1", ">= 0.1.1"
-  s.add_runtime_dependency     "ensure-encoding", "~> 0.1", "<= 0.1.1"
+  s.add_runtime_dependency     "sterilizer", "<= 0.4.1"
   s.add_development_dependency "rake", '~> 0'
   s.add_development_dependency "rspec", '~> 0'
 end
