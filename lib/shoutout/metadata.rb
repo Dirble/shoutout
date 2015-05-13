@@ -7,7 +7,7 @@ module Shoutout
         if value != nil
           valuetaken = value.match(/\A'(.*)'\z/)
           if valuetaken != nil
-            metadata[key] = valuetaken[1].sterilize!
+            metadata[key] = valuetaken[1].strip!
           end
         end
       end

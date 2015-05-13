@@ -1,7 +1,6 @@
 require "uri"
 require "socket"
 require 'tcp_timeout'
-require 'sterilizer'
 
 require "shoutout/version"
 require "shoutout/util"
