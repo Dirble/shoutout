@@ -70,7 +70,7 @@ module Shoutout
       private
         def artist_and_song
           if now_playing != nil
-            @artist_and_song ||= now_playing.split(" - ", 2)
+            @artist_and_song ||= now_playing.ensure_encoding('UTF-8').split(" - ", 2)
           else
             @artist_and_song = ["", ""]
           end
