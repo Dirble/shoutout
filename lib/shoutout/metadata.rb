@@ -7,12 +7,10 @@ module Shoutout
         if value != nil
           valuetaken = value.match(/\A'(.*)'\z/)
           if valuetaken != nil
-            valuetaken = valuetaken[1]
-            if valuetaken.valid_encoding?
-                metadata[key] = valuetaken.strip
-            else
-                metadata[key] = valuetaken.force_encoding("ISO-8859-1").encode("UTF-8").strip
-            end
+            metadata[key] = valuetaken[1].ensure_encoding('UTF-8',
+                                                                         :external_encoding  => :sniff,
+                                                                         :invalid_characters => :drop
+            )
           end
         end
       end
