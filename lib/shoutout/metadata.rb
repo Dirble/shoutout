@@ -9,7 +9,7 @@ module Shoutout
           if valuetaken != nil
             valuetakens = valuetaken[1].ensure_encoding('UTF-8',
                                                         :external_encoding  => :sniff,
-                                                        :invalid_characters => :transcode
+                                                        :invalid_characters => :drop
             )
             metadata[key] = valuetakens.scrub!
           end
