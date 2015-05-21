@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.test_files    = Dir.glob("spec/**/*")
   s.require_path  = "lib"
   
+  s.required_ruby_version     = '>= 2.1'
+  
   s.add_runtime_dependency     "tcp_timeout", "~> 0.1", ">= 0.1.1"
   s.add_runtime_dependency     "ensure-encoding", "~> 0.1", "<= 0.1.1"
   s.add_development_dependency "rake", '~> 0'
